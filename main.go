@@ -39,7 +39,6 @@ func main() {
 
 	fmt.Print("\033[H\033[2J")
 	fmt.Printf("STARTING...\n")
-	startTime := time.Now()
 
 	training, validation, err := fileloader.LoadData("./data/train.csv", *offsetPtr, *countPtr)
 	if err != nil {
@@ -68,6 +67,9 @@ func main() {
 	missed := make(chan recognize.Prediction, 1000)
 
 	chunks := fileloader.ChunkData(validation, *threadsPtr)
+	fmt.Println("Done chunking...")
+
+	startTime := time.Now()
 
 	for _, chunk := range chunks {
 		wg.Add(1)
