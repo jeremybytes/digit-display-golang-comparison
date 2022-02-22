@@ -25,8 +25,8 @@ func writeOutput(prediction recognize.Prediction) {
 func main() {
 
 	// command line flags
-	countPtr := flag.Int("count", 1000, "number of records to identify")
-	offsetPtr := flag.Int("offset", 3000, "starting record in data set")
+	countPtr := flag.Int("count", 100, "number of records to identify")
+	offsetPtr := flag.Int("offset", 1000, "starting record in data set")
 	classPtr := flag.String("class", "euclidean", "classifier calculation type - currently supported: 'manhattan', 'euclidean'")
 	threadsPtr := flag.Int("threads", 6, "number of threads to use")
 
@@ -99,11 +99,12 @@ func main() {
 		total++
 	}
 	elapsed := time.Since(startTime)
+	missedCount := len(missed)
 
 	fmt.Println(strings.Repeat("=", 115))
-	fmt.Println(classifier)
-	fmt.Printf("Total records: %v\n", total)
-	fmt.Printf("Time elapsed: %v\n\n", elapsed)
+	fmt.Printf("Using %v -- Offset: %v   Count: %v\n", classifier, *offsetPtr, total)
+	fmt.Printf("Total time: %v\n", elapsed)
+	fmt.Printf("Total errors: %v\n", missedCount)
 	fmt.Println("Press ENTER to show errors")
 	reader := bufio.NewReader(os.Stdin)
 	reader.ReadLine()
@@ -112,16 +113,13 @@ func main() {
 	fmt.Println("   MISSED RECORDS   ")
 	fmt.Println(strings.Repeat("=", 115))
 
-	missedCount := 0
 	for record := range missed {
-		missedCount++
 		writeOutput(record)
 		fmt.Println(strings.Repeat("-", 115))
 	}
 
 	fmt.Println(strings.Repeat("=", 115))
-	fmt.Println(classifier)
-	fmt.Printf("Total records: %v\n", total)
-	fmt.Printf("Time elapsed: %v\n\n", elapsed)
-	fmt.Printf("Errors: %v", missedCount)
+	fmt.Printf("Using %v -- Offset: %v   Count: %v\n", classifier, *offsetPtr, total)
+	fmt.Printf("Total time: %v\n", elapsed)
+	fmt.Printf("Total errors: %v\n", missedCount)
 }
