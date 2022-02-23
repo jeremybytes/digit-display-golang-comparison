@@ -17,9 +17,9 @@ import (
 )
 
 func writeOutput(prediction recognize.Prediction) {
-	header := fmt.Sprintf("Actual: %v - Prediction: %v\n", prediction.Actual.Actual, prediction.Predicted.Actual)
+	header := fmt.Sprintf("Actual: %v %v | Prediction: %v\n", prediction.Actual.Actual, strings.Repeat(" ", 46), prediction.Predicted.Actual)
 	image := display.GetImagesAsString(prediction.Actual.Image, prediction.Predicted.Image)
-	fmt.Printf("%v%v", header, image)
+	fmt.Printf("%v%v%v\n", header, image, strings.Repeat("=", 115))
 }
 
 func main() {
@@ -101,7 +101,7 @@ func main() {
 	elapsed := time.Since(startTime)
 	missedCount := len(missed)
 
-	fmt.Println(strings.Repeat("=", 115))
+	//fmt.Println(strings.Repeat("=", 115))
 	fmt.Printf("Using %v -- Offset: %v   Count: %v\n", classifier, *offsetPtr, total)
 	fmt.Printf("Total time: %v\n", elapsed)
 	fmt.Printf("Total errors: %v\n", missedCount)
@@ -115,10 +115,10 @@ func main() {
 
 	for record := range missed {
 		writeOutput(record)
-		fmt.Println(strings.Repeat("-", 115))
+		//fmt.Println(strings.Repeat("-", 115))
 	}
 
-	fmt.Println(strings.Repeat("=", 115))
+	//fmt.Println(strings.Repeat("=", 115))
 	fmt.Printf("Using %v -- Offset: %v   Count: %v\n", classifier, *offsetPtr, total)
 	fmt.Printf("Total time: %v\n", elapsed)
 	fmt.Printf("Total errors: %v\n", missedCount)

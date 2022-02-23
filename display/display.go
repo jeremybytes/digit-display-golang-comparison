@@ -3,31 +3,33 @@ package display
 import "strings"
 
 func GetImagesAsString(image1 []int, image2 []int) string {
-	firstImage := strings.Split(GetImageAsString(image1), "\n")
-	secondImage := strings.Split(GetImageAsString(image2), "\n")
+	firstImage := GetImageAsArray(image1)
+	secondImage := GetImageAsArray(image2)
 
-	var output string
-	// merge strings
+	var output strings.Builder
+
 	for i := 0; i < 28; i++ {
-		output += firstImage[i]
-		output += " | "
-		output += secondImage[i]
-		output += "\n"
+		output.WriteString(firstImage[i])
+		output.WriteString(" | ")
+		output.WriteString(secondImage[i])
+		output.WriteString("\n")
 	}
-	return output
+	return output.String()
 }
 
-func GetImageAsString(imageData []int) string {
-	var output string
+func GetImageAsArray(imageData []int) [28]string {
+	var output [28]string
+	var line strings.Builder
 	for i, pixel := range imageData {
-		if i%28 == 0 && i > 0 {
-			output += "\n"
+		if i%28 == 0 && i != 0 {
+			output[(i/28)-1] = line.String()
+			line.Reset()
 		}
 		outputChar := getDisplayCharForPixel(pixel)
-		output += outputChar
-		output += outputChar
+		line.WriteString(outputChar)
+		line.WriteString(outputChar)
 	}
-	output += "\n"
+	output[27] = line.String()
 	return output
 }
 
